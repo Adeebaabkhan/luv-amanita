@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#8B5CF6">
-    <title>Luv Amanita Tracker - Login 🍄</title>
+    <title>Sales Tracker - Login 🍄</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&family=Righteous&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&family=Righteous&family=Roboto:wght@300;400;700&family=Open+Sans:wght@300;400;700&display=swap');
 
         * {
             margin: 0;
@@ -14,9 +14,25 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --primary: #8B5CF6;
+            --primary-dark: #7C3AED;
+            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            --font-family: 'Poppins', sans-serif;
+        }
+
+        /* Dark Mode Variables */
+        body.dark-mode {
+            --bg-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            --card-bg: rgba(30, 30, 30, 0.95);
+            --text-color: #ffffff;
+            --input-bg: #2a2a3e;
+            --input-border: #4a4a6e;
+        }
+
         body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            font-family: var(--font-family);
+            background: var(--bg-gradient);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -24,6 +40,7 @@
             padding: 20px;
             position: relative;
             overflow: hidden;
+            transition: all 0.3s ease;
         }
 
         /* Animated Background */
@@ -41,6 +58,52 @@
         @keyframes backgroundMove {
             0% { transform: translate(0, 0); }
             100% { transform: translate(50px, 50px); }
+        }
+
+        /* Dark Mode Toggle */
+        .dark-mode-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .dark-mode-toggle:hover {
+            transform: scale(1.1);
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Language Toggle */
+        .lang-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 700;
+            color: white;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .lang-toggle:hover {
+            transform: scale(1.05);
+            background: rgba(255, 255, 255, 0.3);
         }
 
         /* Floating decorations */
@@ -95,6 +158,11 @@
             background-image: linear-gradient(white, white), linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #00d4ff 75%, #667eea 100%);
             background-origin: border-box;
             background-clip: padding-box, border-box;
+        }
+
+        body.dark-mode .login-container {
+            background: rgba(30, 30, 30, 0.95);
+            background-image: linear-gradient(rgba(30, 30, 30, 0.95), rgba(30, 30, 30, 0.95)), linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #00d4ff 75%, #667eea 100%);
         }
 
         @keyframes slideUp {
@@ -178,6 +246,10 @@
             padding: 50px 40px;
         }
 
+        body.dark-mode .login-form {
+            background: rgba(30, 30, 30, 0.5);
+        }
+
         .form-group {
             margin-bottom: 30px;
         }
@@ -191,6 +263,10 @@
             display: flex;
             align-items: center;
             gap: 8px;
+        }
+
+        body.dark-mode .form-group label {
+            color: #A78BFA;
         }
 
         .input-wrapper {
@@ -213,11 +289,17 @@
             border: 3px solid #E9D5FF;
             border-radius: 20px;
             font-size: 1em;
-            font-family: 'Poppins', sans-serif;
+            font-family: var(--font-family);
             transition: all 0.3s ease;
             background: #FAF5FF;
             font-weight: 600;
             color: #6B21A8;
+        }
+
+        body.dark-mode input {
+            background: #2a2a3e;
+            border-color: #4a4a6e;
+            color: #ffffff;
         }
 
         input::placeholder {
@@ -225,11 +307,20 @@
             opacity: 0.8;
         }
 
+        body.dark-mode input::placeholder {
+            color: #6B7280;
+        }
+
         input:focus {
             outline: none;
             border-color: #8B5CF6;
             box-shadow: 0 0 0 5px rgba(139, 92, 246, 0.2);
             background: white;
+        }
+
+        body.dark-mode input:focus {
+            background: #1a1a2e;
+            box-shadow: 0 0 0 5px rgba(139, 92, 246, 0.3);
         }
 
         input:focus + .input-icon {
@@ -253,7 +344,7 @@
             font-weight: 800;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-family: 'Poppins', sans-serif;
+            font-family: var(--font-family);
             margin-top: 20px;
             text-transform: uppercase;
             letter-spacing: 1.5px;
@@ -326,6 +417,11 @@
             font-weight: 700;
         }
 
+        body.dark-mode .login-footer {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #A78BFA;
+        }
+
         .login-footer::before {
             content: '🍄';
             margin-right: 10px;
@@ -372,6 +468,11 @@
                 height: 90px;
                 font-size: 3.5em;
             }
+
+            .lang-toggle, .dark-mode-toggle {
+                padding: 10px 15px;
+                font-size: 0.85em;
+            }
         }
 
         /* Loading animation */
@@ -392,6 +493,12 @@
     </style>
 </head>
 <body>
+    <!-- Dark Mode Toggle -->
+    <button class="dark-mode-toggle" onclick="toggleDarkMode()" id="darkModeBtn">🌙</button>
+
+    <!-- Language Toggle -->
+    <button class="lang-toggle" onclick="toggleLanguage()" id="langBtn">🇵🇭 Filipino</button>
+
     <!-- Floating Decorations -->
     <div class="decoration">🍄</div>
     <div class="decoration">🌙</div>
@@ -407,18 +514,18 @@
     <div class="login-container">
         <div class="login-header">
             <div class="login-icon">🍄</div>
-            <h1>Luv Amanita Tracker</h1>
-            <p>✨ Your Magical Sales Journey 💜</p>
+            <h1 id="appTitle">Sales Tracker</h1>
+            <p id="appSubtitle">✨ Your Magical Sales Journey 💜</p>
         </div>
 
         <div class="login-form">
             <div class="error-message" id="errorMessage">
-                ❌ Invalid username or password. Please try again! 🔒
+                <span id="errorText">❌ Invalid username or password. Please try again! 🔒</span>
             </div>
 
             <form id="loginForm">
                 <div class="form-group">
-                    <label>👤 Username</label>
+                    <label id="usernameLabel">👤 Username</label>
                     <div class="input-wrapper">
                         <span class="input-icon">👤</span>
                         <input type="text" id="username" placeholder="Enter your username" required autofocus autocomplete="username">
@@ -426,7 +533,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label>🔒 Password</label>
+                    <label id="passwordLabel">🔒 Password</label>
                     <div class="input-wrapper">
                         <span class="input-icon">🔒</span>
                         <input type="password" id="password" placeholder="Enter your password" required autocomplete="current-password">
@@ -435,19 +542,94 @@
                 </div>
 
                 <button type="submit" class="btn-login" id="loginBtn">
-                    <span class="btn-text">🚀 Login to Dashboard</span>
+                    <span class="btn-text" id="loginBtnText">🚀 Login to Dashboard</span>
                 </button>
             </form>
         </div>
 
         <div class="login-footer">
-            🔐 Secure Login • Luv Amanita © 2025
+            <span id="footerText">🔐 Secure Login • Sales Tracker © 2025</span>
         </div>
     </div>
 
     <script>
+        // Language translations
+        const translations = {
+            en: {
+                appTitle: 'Sales Tracker',
+                appSubtitle: '✨ Your Magical Sales Journey 💜',
+                usernameLabel: '👤 Username',
+                passwordLabel: '🔒 Password',
+                usernamePlaceholder: 'Enter your username',
+                passwordPlaceholder: 'Enter your password',
+                loginBtn: '🚀 Login to Dashboard',
+                footerText: '🔐 Secure Login • Sales Tracker © 2025',
+                errorText: '❌ Invalid username or password. Please try again! 🔒',
+                loggingIn: 'Logging in...',
+                success: '✅ Success! Redirecting...',
+                langBtn: '🇵🇭 Filipino'
+            },
+            tl: {
+                appTitle: 'Sales Tracker',
+                appSubtitle: '✨ Ang Iyong Mahiwagang Paglalakbay sa Benta 💜',
+                usernameLabel: '👤 Username',
+                passwordLabel: '🔒 Password',
+                usernamePlaceholder: 'Ilagay ang iyong username',
+                passwordPlaceholder: 'Ilagay ang iyong password',
+                loginBtn: '🚀 Mag-login sa Dashboard',
+                footerText: '🔐 Secure na Login • Sales Tracker © 2025',
+                errorText: '❌ Mali ang username o password. Subukan ulit! 🔒',
+                loggingIn: 'Nag-lo-login...',
+                success: '✅ Tagumpay! Dinadala ka...',
+                langBtn: '🇺🇸 English'
+            }
+        };
+
+        // Initialize language
+        let currentLang = localStorage.getItem('salesTrackerLang') || 'en';
+
+        // Initialize dark mode
+        let isDarkMode = localStorage.getItem('salesTrackerDarkMode') === 'true';
+        if (isDarkMode) {
+            document.body.classList.add('dark-mode');
+            document.getElementById('darkModeBtn').textContent = '☀️';
+        }
+
+        // Apply translations
+        function applyTranslations() {
+            const t = translations[currentLang];
+            document.getElementById('appTitle').textContent = t.appTitle;
+            document.getElementById('appSubtitle').textContent = t.appSubtitle;
+            document.getElementById('usernameLabel').textContent = t.usernameLabel;
+            document.getElementById('passwordLabel').textContent = t.passwordLabel;
+            document.getElementById('username').placeholder = t.usernamePlaceholder;
+            document.getElementById('password').placeholder = t.passwordPlaceholder;
+            document.getElementById('loginBtnText').textContent = t.loginBtn;
+            document.getElementById('footerText').textContent = t.footerText;
+            document.getElementById('errorText').textContent = t.errorText;
+            document.getElementById('langBtn').textContent = t.langBtn;
+        }
+
+        // Toggle language
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'tl' : 'en';
+            localStorage.setItem('salesTrackerLang', currentLang);
+            applyTranslations();
+        }
+
+        // Toggle dark mode
+        function toggleDarkMode() {
+            isDarkMode = !isDarkMode;
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('salesTrackerDarkMode', isDarkMode);
+            document.getElementById('darkModeBtn').textContent = isDarkMode ? '☀️' : '🌙';
+        }
+
+        // Apply initial translations
+        applyTranslations();
+
         // Initialize users in localStorage if not exists
-        if (!localStorage.getItem('luvAmanitaUsers')) {
+        if (!localStorage.getItem('salesTrackerUsers')) {
             const defaultUsers = {
                 admin: {
                     password: 'admin2025',
@@ -455,7 +637,7 @@
                     name: 'Administrator'
                 }
             };
-            localStorage.setItem('luvAmanitaUsers', JSON.stringify(defaultUsers));
+            localStorage.setItem('salesTrackerUsers', JSON.stringify(defaultUsers));
         }
 
         // Password toggle functionality
@@ -476,26 +658,27 @@
             const password = document.getElementById('password').value;
             const errorMessage = document.getElementById('errorMessage');
             const loginBtn = document.getElementById('loginBtn');
+            const t = translations[currentLang];
 
             // Show loading state
             loginBtn.disabled = true;
-            loginBtn.innerHTML = '<span class="btn-text">Logging in... <span class="loading"></span></span>';
+            loginBtn.innerHTML = `<span class="btn-text">${t.loggingIn} <span class="loading"></span></span>`;
 
             // Simulate loading delay for better UX
             setTimeout(() => {
                 // Get users from localStorage
-                const users = JSON.parse(localStorage.getItem('luvAmanitaUsers'));
+                const users = JSON.parse(localStorage.getItem('salesTrackerUsers'));
 
                 // Check credentials
                 if (users[username] && users[username].password === password) {
                     // Store session
-                    sessionStorage.setItem('luvAmanitaLoggedIn', 'true');
-                    sessionStorage.setItem('luvAmanitaUser', username);
-                    sessionStorage.setItem('luvAmanitaRole', users[username].role);
-                    sessionStorage.setItem('luvAmanitaName', users[username].name);
+                    sessionStorage.setItem('salesTrackerLoggedIn', 'true');
+                    sessionStorage.setItem('salesTrackerUser', username);
+                    sessionStorage.setItem('salesTrackerRole', users[username].role);
+                    sessionStorage.setItem('salesTrackerName', users[username].name);
 
                     // Success feedback
-                    loginBtn.innerHTML = '<span class="btn-text">✅ Success! Redirecting...</span>';
+                    loginBtn.innerHTML = `<span class="btn-text">${t.success}</span>`;
                     loginBtn.style.background = 'linear-gradient(135deg, #10B981 0%, #059669 100%)';
 
                     // Redirect to dashboard
@@ -509,7 +692,7 @@
                     
                     // Reset button
                     loginBtn.disabled = false;
-                    loginBtn.innerHTML = '<span class="btn-text">🚀 Login to Dashboard</span>';
+                    loginBtn.innerHTML = `<span class="btn-text">${t.loginBtn}</span>`;
                     
                     // Hide error after 4 seconds
                     setTimeout(() => {
@@ -526,7 +709,7 @@
         });
 
         // Check if already logged in
-        if (sessionStorage.getItem('luvAmanitaLoggedIn') === 'true') {
+        if (sessionStorage.getItem('salesTrackerLoggedIn') === 'true') {
             window.location.href = 'luv-amanita-dashboard.html';
         }
 
