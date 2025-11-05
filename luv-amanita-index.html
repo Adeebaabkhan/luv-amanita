@@ -3,93 +3,554 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Page</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins&family=Dancing+Script&family=Pacifico&family=Great+Vibes&family=Satisfy&family=Cookie&family=Allura&family=Alex+Brush&family=Kaushan+Script&family=Lobster&family=Righteous&family=Roboto&family=Open+Sans&display=swap" rel="stylesheet">
+    <meta name="theme-color" content="#8B5CF6">
+    <title>Sales Tracker - Login 🍄</title>
+    
+    <!-- Multiple Beautiful Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&family=Dancing+Script:wght@400;700&family=Pacifico&family=Great+Vibes&family=Satisfy&family=Cookie&family=Allura&family=Alex+Brush&family=Kaushan+Script&family=Lobster&family=Righteous&family=Roboto:wght@300;400;700&family=Open+Sans:wght@300;400;700&display=swap" rel="stylesheet">
+    
     <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+        * {
             margin: 0;
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #8B5CF6;
+            --primary-dark: #7C3AED;
+            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            --font-family: 'Poppins', sans-serif;
+        }
+
+        body.dark-mode {
+            --bg-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            --card-bg: rgba(30, 30, 30, 0.95);
+            --text-color: #ffffff;
+            --input-bg: #2a2a3e;
+            --input-border: #4a4a6e;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.3) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: backgroundMove 20s linear infinite;
+            z-index: 0;
+        }
+
+        @keyframes backgroundMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .dark-mode-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .dark-mode-toggle:hover {
+            transform: scale(1.1);
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .lang-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 700;
+            color: white;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .lang-toggle:hover {
+            transform: scale(1.05);
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .decoration {
+            position: absolute;
+            font-size: 3em;
+            animation: float 8s ease-in-out infinite;
+            opacity: 0.3;
+            z-index: 1;
+        }
+
+        .decoration:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+        .decoration:nth-child(2) { top: 20%; right: 15%; animation-delay: 1s; font-size: 2.5em; }
+        .decoration:nth-child(3) { bottom: 15%; left: 15%; animation-delay: 2s; }
+        .decoration:nth-child(4) { bottom: 20%; right: 10%; animation-delay: 1.5s; font-size: 2.8em; }
+        .decoration:nth-child(5) { top: 50%; left: 5%; animation-delay: 0.5s; }
+        .decoration:nth-child(6) { top: 60%; right: 8%; animation-delay: 2.5s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-30px) rotate(15deg); }
+        }
+
+        .sparkles {
+            position: absolute;
+            font-size: 1.5em;
+            animation: sparkle 3s ease-in-out infinite;
+        }
+
+        .sparkles:nth-child(7) { top: 15%; left: 25%; animation-delay: 0.3s; }
+        .sparkles:nth-child(8) { top: 75%; right: 25%; animation-delay: 1.2s; }
+        .sparkles:nth-child(9) { top: 40%; left: 80%; animation-delay: 0.8s; }
+        .sparkles:nth-child(10) { bottom: 30%; left: 70%; animation-delay: 1.8s; }
+
+        @keyframes sparkle {
+            0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
+            50% { opacity: 1; transform: scale(1.5) rotate(180deg); }
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 35px;
+            box-shadow: 0 25px 70px rgba(139, 92, 246, 0.4);
+            overflow: hidden;
+            max-width: 520px;
+            width: 100%;
+            animation: slideUp 0.7s ease;
+            position: relative;
+            z-index: 10;
+            border: 4px solid transparent;
+            background-image: linear-gradient(white, white), linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #00d4ff 75%, #667eea 100%);
+            background-origin: border-box;
+            background-clip: padding-box, border-box;
+        }
+
+        body.dark-mode .login-container {
+            background: rgba(30, 30, 30, 0.95);
+            background-image: linear-gradient(rgba(30, 30, 30, 0.95), rgba(30, 30, 30, 0.95)), linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #00d4ff 75%, #667eea 100%);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(60px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .login-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 50px 40px;
+            text-align: center;
+            position: relative;
             overflow: hidden;
         }
-        .animation {
+
+        .login-header::before {
+            content: '🍄';
             position: absolute;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            animation: float 6s infinite;
+            font-size: 6em;
+            top: -30px;
+            right: -30px;
+            opacity: 0.15;
+            animation: spin 15s linear infinite;
         }
-        @keyframes float {
-            0% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
-            100% { transform: translateY(0); }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
-        .login-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-            width: 300px;
+
+        .login-icon {
+            width: 110px;
+            height: 110px;
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(15px);
+            border-radius: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4.5em;
+            margin: 0 auto 25px;
+            animation: bounce 2.5s infinite;
+            border: 5px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
         }
-        .toggler {
-            cursor: pointer;
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-18px) rotate(-8deg); }
+            75% { transform: translateY(-18px) rotate(8deg); }
+        }
+
+        .login-header h1 {
+            font-size: 2.5em;
+            margin-bottom: 12px;
+            font-family: 'Dancing Script', cursive;
+            text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);
+            animation: glow 2.5s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3); }
+            50% { text-shadow: 0 0 25px rgba(255, 255, 255, 0.9), 4px 4px 8px rgba(0, 0, 0, 0.3); }
+        }
+
+        .login-header p {
+            opacity: 0.95;
+            font-size: 1.15em;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .login-form {
+            padding: 50px 40px;
+        }
+
+        body.dark-mode .login-form {
+            background: rgba(30, 30, 30, 0.5);
+        }
+
+        .form-group {
+            margin-bottom: 30px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #8B5CF6;
+            font-size: 1em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        body.dark-mode .form-group label {
+            color: #A78BFA;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-icon {
             position: absolute;
-            padding: 10px;
-            z-index: 10;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.6em;
+            color: #8B5CF6;
+            z-index: 1;
         }
-        .toggle-lang { top: 10px; left: 10px; }
-        .toggle-dark { top: 10px; right: 10px; }
+
         input {
             width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: none;
-            border-radius: 5px;
+            padding: 18px 22px 18px 60px;
+            border: 3px solid #E9D5FF;
+            border-radius: 20px;
+            font-size: 1em;
+            font-family: var(--font-family);
+            transition: all 0.3s ease;
+            background: #FAF5FF;
+            font-weight: 600;
+            color: #6B21A8;
         }
-        button {
+
+        body.dark-mode input {
+            background: #2a2a3e;
+            border-color: #4a4a6e;
+            color: #ffffff;
+        }
+
+        input::placeholder {
+            color: #C4B5FD;
+            opacity: 0.8;
+        }
+
+        body.dark-mode input::placeholder {
+            color: #6B7280;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #8B5CF6;
+            box-shadow: 0 0 0 5px rgba(139, 92, 246, 0.2);
+            background: white;
+        }
+
+        body.dark-mode input:focus {
+            background: #1a1a2e;
+            box-shadow: 0 0 0 5px rgba(139, 92, 246, 0.3);
+        }
+
+        input:focus + .input-icon {
+            animation: wiggle 0.6s ease;
+        }
+
+        @keyframes wiggle {
+            0%, 100% { transform: translateY(-50%) rotate(0deg); }
+            25% { transform: translateY(-50%) rotate(-12deg); }
+            75% { transform: translateY(-50%) rotate(12deg); }
+        }
+
+        .btn-login {
             width: 100%;
-            padding: 10px;
-            background: #667eea;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 25px;
+            font-size: 1.15em;
+            font-weight: 800;
             cursor: pointer;
-            transition: 0.3s;
-        }
-        button:hover {
-            background: #764ba2;
-        }
-        footer {
-            text-align: center;
+            transition: all 0.3s ease;
+            font-family: var(--font-family);
             margin-top: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            box-shadow: 0 10px 25px rgba(139, 92, 246, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-login::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            transform: translate(-50%, -50%);
+            transition: width 0.7s, height 0.7s;
+        }
+
+        .btn-login:hover::before {
+            width: 350px;
+            height: 350px;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 35px rgba(139, 92, 246, 0.5);
+        }
+
+        .btn-login:active {
+            transform: translateY(0);
+        }
+
+        .btn-text {
+            position: relative;
+            z-index: 1;
+        }
+
+        .error-message {
+            background: linear-gradient(135deg, #FFE5E5 0%, #FFC1CC 100%);
+            color: #991B1B;
+            padding: 18px;
+            border-radius: 18px;
+            margin-bottom: 25px;
+            display: none;
+            font-size: 0.98em;
+            border-left: 6px solid #DC2626;
+            font-weight: 700;
+            animation: shake 0.6s ease;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-15px); }
+            75% { transform: translateX(15px); }
+        }
+
+        .login-footer {
+            text-align: center;
+            padding: 28px;
+            background: linear-gradient(135deg, #FAF5FF 0%, #F3E8FF 100%);
+            font-size: 0.95em;
+            color: #6B21A8;
+            font-weight: 700;
+        }
+
+        body.dark-mode .login-footer {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #A78BFA;
+        }
+
+        .login-footer::before {
+            content: '🍄';
+            margin-right: 10px;
+        }
+
+        .login-footer::after {
+            content: '🍄';
+            margin-left: 10px;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 1.4em;
+            color: #8B5CF6;
+            z-index: 1;
+            user-select: none;
+            transition: all 0.3s ease;
+        }
+
+        .password-toggle:hover {
+            transform: translateY(-50%) scale(1.25);
+        }
+
+        @media (max-width: 480px) {
+            .login-header {
+                padding: 40px 25px;
+            }
+
+            .login-form {
+                padding: 35px 25px;
+            }
+
+            .login-header h1 {
+                font-size: 2em;
+            }
+
+            .login-icon {
+                width: 90px;
+                height: 90px;
+                font-size: 3.5em;
+            }
+
+            .lang-toggle, .dark-mode-toggle {
+                padding: 10px 15px;
+                font-size: 0.85em;
+            }
+        }
+
+        .loading {
+            display: inline-block;
+            width: 22px;
+            height: 22px;
+            border: 4px solid rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin-load 0.9s linear infinite;
+            margin-left: 12px;
+        }
+
+        @keyframes spin-load {
+            to { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
-    <div class="animation">
-        <!-- Animated decorations like mushrooms, stars, sparkles can be inserted here -->
-    </div>
-    <div class="login-card">
-        <h2>Login</h2>
-        <div class="toggler toggle-lang">EN/PH</div>
-        <div class="toggler toggle-dark">🌙</div>
-        <input type="text" id="username" placeholder="Username">
-        <input type="password" id="password" placeholder="Password">
-        <button id="loginBtn">Login</button>
-        <footer>
-            <p>&copy; 2025 Your Company</p>
-        </footer>
+    <button class="dark-mode-toggle" onclick="toggleDarkMode()" id="darkModeBtn">🌙</button>
+    <button class="lang-toggle" onclick="toggleLanguage()" id="langBtn">🇵🇭 Filipino</button>
+
+    <div class="decoration">🍄</div>
+    <div class="decoration">🌙</div>
+    <div class="decoration">🦋</div>
+    <div class="decoration">🌺</div>
+    <div class="decoration">🎨</div>
+    <div class="decoration">💜</div>
+    <div class="sparkles">✨</div>
+    <div class="sparkles">⭐</div>
+    <div class="sparkles">💫</div>
+    <div class="sparkles">🌟</div>
+
+    <div class="login-container">
+        <div class="login-header">
+            <div class="login-icon">🍄</div>
+            <h1 id="appTitle">Sales Tracker</h1>
+            <p id="appSubtitle">✨ Your Magical Sales Journey 💜</p>
+        </div>
+
+        <div class="login-form">
+            <div class="error-message" id="errorMessage">
+                <span id="errorText">❌ Invalid credentials. Please try again! 🔒</span>
+            </div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label id="usernameLabel">👤 Email</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">👤</span>
+                        <input type="email" id="email" placeholder="Enter your email" required autofocus autocomplete="email">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label id="passwordLabel">🔒 Password</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">🔒</span>
+                        <input type="password" id="password" placeholder="Enter your password" required autocomplete="current-password">
+                        <span class="password-toggle" id="togglePassword">👁️</span>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-login" id="loginBtn">
+                    <span class="btn-text" id="loginBtnText">🚀 Login to Dashboard</span>
+                </button>
+            </form>
+        </div>
+
+        <div class="login-footer">
+            <span id="footerText">🔐 Secure Firebase Login • Sales Tracker © 2025</span>
+        </div>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
     <script>
-        var firebaseConfig = {
+        // Firebase Configuration
+        const firebaseConfig = {
             apiKey: "AIzaSyBwxxYAx2wmAdiFKrJr8MPuBznjb0mmPXI",
             authDomain: "sales-tracker-shee.firebaseapp.com",
             projectId: "sales-tracker-shee",
@@ -98,21 +559,200 @@
             appId: "1:860183597683:web:74f2e438a88d20fdd25006",
             databaseURL: "https://sales-tracker-shee-default-rtdb.asia-southeast1.firebasedatabase.app"
         };
+
+        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const database = firebase.database();
 
-        document.getElementById('loginBtn').addEventListener('click', function() {
-            const username = document.getElementById('username').value;
+        // Language translations
+        const translations = {
+            en: {
+                appTitle: 'Sales Tracker',
+                appSubtitle: '✨ Your Magical Sales Journey 💜',
+                usernameLabel: '👤 Email',
+                passwordLabel: '🔒 Password',
+                usernamePlaceholder: 'Enter your email',
+                passwordPlaceholder: 'Enter your password',
+                loginBtn: '🚀 Login to Dashboard',
+                footerText: '🔐 Secure Firebase Login • Sales Tracker © 2025',
+                errorText: '❌ Invalid credentials. Please try again! 🔒',
+                loggingIn: 'Logging in...',
+                success: '✅ Success! Redirecting...',
+                langBtn: '🇵🇭 Filipino'
+            },
+            tl: {
+                appTitle: 'Sales Tracker',
+                appSubtitle: '✨ Ang Iyong Mahiwagang Paglalakbay sa Benta 💜',
+                usernameLabel: '👤 Email',
+                passwordLabel: '🔒 Password',
+                usernamePlaceholder: 'Ilagay ang iyong email',
+                passwordPlaceholder: 'Ilagay ang iyong password',
+                loginBtn: '🚀 Mag-login sa Dashboard',
+                footerText: '🔐 Secure na Firebase Login • Sales Tracker © 2025',
+                errorText: '❌ Mali ang kredensyal. Subukan ulit! 🔒',
+                loggingIn: 'Nag-lo-login...',
+                success: '✅ Tagumpay! Dinadala ka...',
+                langBtn: '🇺🇸 English'
+            }
+        };
+
+        // Initialize language
+        let currentLang = localStorage.getItem('salesTrackerLang') || 'en';
+
+        // Initialize dark mode
+        let isDarkMode = localStorage.getItem('salesTrackerDarkMode') === 'true';
+        if (isDarkMode) {
+            document.body.classList.add('dark-mode');
+            document.getElementById('darkModeBtn').textContent = '☀️';
+        }
+
+        // Apply translations
+        function applyTranslations() {
+            const t = translations[currentLang];
+            document.getElementById('appTitle').textContent = t.appTitle;
+            document.getElementById('appSubtitle').textContent = t.appSubtitle;
+            document.getElementById('usernameLabel').textContent = t.usernameLabel;
+            document.getElementById('passwordLabel').textContent = t.passwordLabel;
+            document.getElementById('email').placeholder = t.usernamePlaceholder;
+            document.getElementById('password').placeholder = t.passwordPlaceholder;
+            document.getElementById('loginBtnText').textContent = t.loginBtn;
+            document.getElementById('footerText').textContent = t.footerText;
+            document.getElementById('errorText').textContent = t.errorText;
+            document.getElementById('langBtn').textContent = t.langBtn;
+        }
+
+        // Toggle language
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'tl' : 'en';
+            localStorage.setItem('salesTrackerLang', currentLang);
+            applyTranslations();
+        }
+
+        // Toggle dark mode
+        function toggleDarkMode() {
+            isDarkMode = !isDarkMode;
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('salesTrackerDarkMode', isDarkMode);
+            document.getElementById('darkModeBtn').textContent = isDarkMode ? '☀️' : '🌙';
+        }
+
+        // Apply initial translations
+        applyTranslations();
+
+        // Password toggle functionality
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('password');
+
+        togglePassword.addEventListener('click', function() {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.textContent = type === 'password' ? '👁️' : '🙈';
+        });
+
+        // Login form submission with Firebase
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('errorMessage');
+            const loginBtn = document.getElementById('loginBtn');
+            const t = translations[currentLang];
 
-            firebase.auth().signInWithEmailAndPassword(username, password)
-                .then(function() {
-                    sessionStorage.setItem('loggedIn', 'true');
-                    window.location.href = 'luv-amanita-dashboard.html';
+            // Show loading state
+            loginBtn.disabled = true;
+            loginBtn.innerHTML = `<span class="btn-text">${t.loggingIn} <span class="loading"></span></span>`;
+
+            // Firebase Authentication
+            auth.signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    // Success
+                    const user = userCredential.user;
+                    
+                    // Store session
+                    sessionStorage.setItem('salesTrackerLoggedIn', 'true');
+                    sessionStorage.setItem('salesTrackerUser', user.email);
+                    sessionStorage.setItem('salesTrackerUserId', user.uid);
+
+                    // Get user data from database
+                    database.ref('users/' + user.uid).once('value').then((snapshot) => {
+                        const userData = snapshot.val();
+                        if (userData) {
+                            sessionStorage.setItem('salesTrackerName', userData.name || user.email);
+                            sessionStorage.setItem('salesTrackerRole', userData.role || 'user');
+                        } else {
+                            sessionStorage.setItem('salesTrackerName', user.email);
+                            sessionStorage.setItem('salesTrackerRole', 'user');
+                        }
+
+                        // Success feedback
+                        loginBtn.innerHTML = `<span class="btn-text">${t.success}</span>`;
+                        loginBtn.style.background = 'linear-gradient(135deg, #10B981 0%, #059669 100%)';
+
+                        // Redirect to dashboard
+                        setTimeout(() => {
+                            window.location.href = 'luv-amanita-dashboard.html';
+                        }, 800);
+                    });
                 })
-                .catch(function(error) {
-                    alert(error.message);
+                .catch((error) => {
+                    // Show error
+                    errorMessage.classList.add('show');
+                    document.getElementById('password').value = '';
+                    
+                    // Reset button
+                    loginBtn.disabled = false;
+                    loginBtn.innerHTML = `<span class="btn-text">${t.loginBtn}</span>`;
+                    
+                    // Hide error after 4 seconds
+                    setTimeout(() => {
+                        errorMessage.classList.remove('show');
+                    }, 4000);
+
+                    // Shake the container
+                    document.querySelector('.login-container').style.animation = 'shake 0.6s ease';
+                    setTimeout(() => {
+                        document.querySelector('.login-container').style.animation = '';
+                    }, 600);
+
+                    console.error('Login error:', error.message);
                 });
         });
+
+        // Check if already logged in
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                window.location.href = 'luv-amanita-dashboard.html';
+            }
+        });
+
+        // Add floating hearts on click
+        document.addEventListener('click', function(e) {
+            const heart = document.createElement('div');
+            heart.style.position = 'fixed';
+            heart.style.left = e.clientX + 'px';
+            heart.style.top = e.clientY + 'px';
+            heart.style.fontSize = '2em';
+            heart.style.pointerEvents = 'none';
+            heart.style.zIndex = '9999';
+            heart.textContent = ['💜', '🍄', '✨', '⭐'][Math.floor(Math.random() * 4)];
+            heart.style.animation = 'float-up 2s ease-out forwards';
+            document.body.appendChild(heart);
+
+            setTimeout(() => heart.remove(), 2000);
+        });
+
+        // Add float-up animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes float-up {
+                0% { opacity: 1; transform: translateY(0) scale(0); }
+                50% { opacity: 1; transform: translateY(-50px) scale(1.3); }
+                100% { opacity: 0; transform: translateY(-100px) scale(0); }
+            }
+        `;
+        document.head.appendChild(style);
     </script>
 </body>
 </html>
