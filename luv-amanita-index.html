@@ -485,6 +485,25 @@
         @keyframes spin-load {
             to { transform: rotate(360deg); }
         }
+
+        .user-hint {
+            background: rgba(139, 92, 246, 0.1);
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border-left: 4px solid #8B5CF6;
+        }
+
+        .user-hint p {
+            margin: 5px 0;
+            font-size: 0.9em;
+            color: #6B21A8;
+            font-weight: 600;
+        }
+
+        body.dark-mode .user-hint p {
+            color: #A78BFA;
+        }
     </style>
 </head>
 <body>
@@ -510,16 +529,22 @@
         </div>
 
         <div class="login-form">
+            <div class="user-hint">
+                <p><strong>🔐 Default Login:</strong></p>
+                <p>👤 Username: <strong>admin</strong></p>
+                <p>🔒 Password: <strong>admin123</strong></p>
+            </div>
+
             <div class="error-message" id="errorMessage">
                 <span id="errorText">❌ Invalid credentials. Please try again! 🔒</span>
             </div>
 
             <form id="loginForm">
                 <div class="form-group">
-                    <label id="usernameLabel">👤 Email</label>
+                    <label id="usernameLabel">👤 Username</label>
                     <div class="input-wrapper">
                         <span class="input-icon">👤</span>
-                        <input type="email" id="email" placeholder="Enter your email" required autofocus autocomplete="email">
+                        <input type="text" id="username" placeholder="Enter username" required autofocus autocomplete="username">
                     </div>
                 </div>
 
@@ -527,7 +552,7 @@
                     <label id="passwordLabel">🔒 Password</label>
                     <div class="input-wrapper">
                         <span class="input-icon">🔒</span>
-                        <input type="password" id="password" placeholder="Enter your password" required autocomplete="current-password">
+                        <input type="password" id="password" placeholder="Enter password" required autocomplete="current-password">
                         <span class="password-toggle" id="togglePassword">👁️</span>
                     </div>
                 </div>
@@ -539,43 +564,30 @@
         </div>
 
         <div class="login-footer">
-            <span id="footerText">🔐 Secure Firebase Login • Sales Tracker © 2025</span>
+            <span id="footerText">🔐 Simple Login • Data Saves to Firebase Cloud ☁️</span>
         </div>
     </div>
 
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-
     <script>
-        // Firebase Configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyBwxxYAx2wmAdiFKrJr8MPuBznjb0mmPXI",
-            authDomain: "sales-tracker-shee.firebaseapp.com",
-            projectId: "sales-tracker-shee",
-            storageBucket: "sales-tracker-shee.firebasestorage.app",
-            messagingSenderId: "860183597683",
-            appId: "1:860183597683:web:74f2e438a88d20fdd25006",
-            databaseURL: "https://sales-tracker-shee-default-rtdb.asia-southeast1.firebasedatabase.app"
+        // Simple user database (no Firebase Auth needed)
+        const users = {
+            'admin': { password: 'admin123', name: 'Admin', role: 'admin' },
+            'manager': { password: 'manager123', name: 'Manager', role: 'manager' },
+            'staff': { password: 'staff123', name: 'Staff', role: 'staff' },
+            'adeebaabkhan': { password: 'shee2025', name: 'Adeeba', role: 'admin' }
         };
-
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const database = firebase.database();
 
         // Language translations
         const translations = {
             en: {
                 appTitle: 'Sales Tracker',
                 appSubtitle: '✨ Your Magical Sales Journey 💜',
-                usernameLabel: '👤 Email',
+                usernameLabel: '👤 Username',
                 passwordLabel: '🔒 Password',
-                usernamePlaceholder: 'Enter your email',
-                passwordPlaceholder: 'Enter your password',
+                usernamePlaceholder: 'Enter username',
+                passwordPlaceholder: 'Enter password',
                 loginBtn: '🚀 Login to Dashboard',
-                footerText: '🔐 Secure Firebase Login • Sales Tracker © 2025',
+                footerText: '🔐 Simple Login • Data Saves to Firebase Cloud ☁️',
                 errorText: '❌ Invalid credentials. Please try again! 🔒',
                 loggingIn: 'Logging in...',
                 success: '✅ Success! Redirecting...',
@@ -584,12 +596,12 @@
             tl: {
                 appTitle: 'Sales Tracker',
                 appSubtitle: '✨ Ang Iyong Mahiwagang Paglalakbay sa Benta 💜',
-                usernameLabel: '👤 Email',
+                usernameLabel: '👤 Username',
                 passwordLabel: '🔒 Password',
-                usernamePlaceholder: 'Ilagay ang iyong email',
-                passwordPlaceholder: 'Ilagay ang iyong password',
+                usernamePlaceholder: 'Ilagay ang username',
+                passwordPlaceholder: 'Ilagay ang password',
                 loginBtn: '🚀 Mag-login sa Dashboard',
-                footerText: '🔐 Secure na Firebase Login • Sales Tracker © 2025',
+                footerText: '🔐 Simple Login • Data ay naka-save sa Firebase Cloud ☁️',
                 errorText: '❌ Mali ang kredensyal. Subukan ulit! 🔒',
                 loggingIn: 'Nag-lo-login...',
                 success: '✅ Tagumpay! Dinadala ka...',
@@ -614,7 +626,7 @@
             document.getElementById('appSubtitle').textContent = t.appSubtitle;
             document.getElementById('usernameLabel').textContent = t.usernameLabel;
             document.getElementById('passwordLabel').textContent = t.passwordLabel;
-            document.getElementById('email').placeholder = t.usernamePlaceholder;
+            document.getElementById('username').placeholder = t.usernamePlaceholder;
             document.getElementById('password').placeholder = t.passwordPlaceholder;
             document.getElementById('loginBtnText').textContent = t.loginBtn;
             document.getElementById('footerText').textContent = t.footerText;
@@ -650,11 +662,11 @@
             this.textContent = type === 'password' ? '👁️' : '🙈';
         });
 
-        // Login form submission with Firebase
+        // Login form submission (SIMPLE - NO FIREBASE AUTH)
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
-            const email = document.getElementById('email').value.trim();
+            const username = document.getElementById('username').value.trim().toLowerCase();
             const password = document.getElementById('password').value;
             const errorMessage = document.getElementById('errorMessage');
             const loginBtn = document.getElementById('loginBtn');
@@ -664,39 +676,24 @@
             loginBtn.disabled = true;
             loginBtn.innerHTML = `<span class="btn-text">${t.loggingIn} <span class="loading"></span></span>`;
 
-            // Firebase Authentication
-            auth.signInWithEmailAndPassword(email, password)
-                .then((userCredential) => {
-                    // Success
-                    const user = userCredential.user;
-                    
-                    // Store session
+            // Simple validation
+            setTimeout(() => {
+                if (users[username] && users[username].password === password) {
+                    // Success - Store session
                     sessionStorage.setItem('salesTrackerLoggedIn', 'true');
-                    sessionStorage.setItem('salesTrackerUser', user.email);
-                    sessionStorage.setItem('salesTrackerUserId', user.uid);
+                    sessionStorage.setItem('salesTrackerUser', username);
+                    sessionStorage.setItem('salesTrackerName', users[username].name);
+                    sessionStorage.setItem('salesTrackerRole', users[username].role);
 
-                    // Get user data from database
-                    database.ref('users/' + user.uid).once('value').then((snapshot) => {
-                        const userData = snapshot.val();
-                        if (userData) {
-                            sessionStorage.setItem('salesTrackerName', userData.name || user.email);
-                            sessionStorage.setItem('salesTrackerRole', userData.role || 'user');
-                        } else {
-                            sessionStorage.setItem('salesTrackerName', user.email);
-                            sessionStorage.setItem('salesTrackerRole', 'user');
-                        }
+                    // Success feedback
+                    loginBtn.innerHTML = `<span class="btn-text">${t.success}</span>`;
+                    loginBtn.style.background = 'linear-gradient(135deg, #10B981 0%, #059669 100%)';
 
-                        // Success feedback
-                        loginBtn.innerHTML = `<span class="btn-text">${t.success}</span>`;
-                        loginBtn.style.background = 'linear-gradient(135deg, #10B981 0%, #059669 100%)';
-
-                        // Redirect to dashboard
-                        setTimeout(() => {
-                            window.location.href = 'luv-amanita-dashboard.html';
-                        }, 800);
-                    });
-                })
-                .catch((error) => {
+                    // Redirect to dashboard
+                    setTimeout(() => {
+                        window.location.href = 'luv-amanita-dashboard.html';
+                    }, 800);
+                } else {
                     // Show error
                     errorMessage.classList.add('show');
                     document.getElementById('password').value = '';
@@ -715,17 +712,14 @@
                     setTimeout(() => {
                         document.querySelector('.login-container').style.animation = '';
                     }, 600);
-
-                    console.error('Login error:', error.message);
-                });
+                }
+            }, 1000);
         });
 
         // Check if already logged in
-        auth.onAuthStateChanged((user) => {
-            if (user) {
-                window.location.href = 'luv-amanita-dashboard.html';
-            }
-        });
+        if (sessionStorage.getItem('salesTrackerLoggedIn') === 'true') {
+            window.location.href = 'luv-amanita-dashboard.html';
+        }
 
         // Add floating hearts on click
         document.addEventListener('click', function(e) {
