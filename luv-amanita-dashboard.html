@@ -916,12 +916,12 @@
             <div class="stat-card">
                 <div class="stat-icon">💰</div>
                 <div class="stat-label">Total Sales</div>
-                <div class="stat-value" id="totalSales">₹0.00</div>
+                <div class="stat-value" id="totalSales">₱0.00</div>
             </div>
             <div class="stat-card">
                 <div class="stat-icon">🌸</div>
                 <div class="stat-label">Today's Sales</div>
-                <div class="stat-value" id="todaySales">₹0.00</div>
+                <div class="stat-value" id="todaySales">₱0.00</div>
             </div>
             <div class="stat-card">
                 <div class="stat-icon">🎨</div>
@@ -931,7 +931,7 @@
             <div class="stat-card">
                 <div class="stat-icon">🦄</div>
                 <div class="stat-label">Average Sale</div>
-                <div class="stat-value" id="avgSale">₹0.00</div>
+                <div class="stat-value" id="avgSale">₱0.00</div>
             </div>
         </div>
 
@@ -957,7 +957,7 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>💵 Amount (₹)</label>
+                        <label>💵 Amount (₱)</label>
                         <input type="number" id="amount" step="0.01" placeholder="0.00" required>
                     </div>
                 </div>
@@ -1128,7 +1128,7 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>💵 Amount (₹)</label>
+                        <label>💵 Amount (₱)</label>
                         <input type="number" id="editAmount" step="0.01" required>
                     </div>
                 </div>
@@ -1354,7 +1354,7 @@
                     <td>${sale.date}</td>
                     <td><strong>${sale.admin}</strong></td>
                     <td>${sale.item}</td>
-                    <td class="amount-cell">₹${sale.amount.toFixed(2)}</td>
+                    <td class="amount-cell">₱${sale.amount.toFixed(2)}</td>
                     <td>${sale.notes}</td>
                     ${isAdmin ? `
                     <td>
@@ -1378,10 +1378,10 @@
                 .reduce((sum, sale) => sum + sale.amount, 0);
             const avg = sales.length > 0 ? total / sales.length : 0;
 
-            document.getElementById('totalSales').textContent = `₹${total.toFixed(2)}`;
-            document.getElementById('todaySales').textContent = `₹${todayTotal.toFixed(2)}`;
+            document.getElementById('totalSales').textContent = `₱${total.toFixed(2)}`;
+            document.getElementById('todaySales').textContent = `₱${todayTotal.toFixed(2)}`;
             document.getElementById('totalTransactions').textContent = sales.length;
-            document.getElementById('avgSale').textContent = `₹${avg.toFixed(2)}`;
+            document.getElementById('avgSale').textContent = `₱${avg.toFixed(2)}`;
         }
 
         function editSale(id) {
@@ -1456,7 +1456,7 @@
 
             let csv = 'Date,Admin,Item,Amount,Notes\n';
             sales.forEach(sale => {
-                csv += `${sale.date},${sale.admin},"${sale.item}",₹${sale.amount.toFixed(2)},"${sale.notes}"\n`;
+                csv += `${sale.date},${sale.admin},"${sale.item}",₱${sale.amount.toFixed(2)},"${sale.notes}"\n`;
             });
 
             const blob = new Blob([csv], { type: 'text/csv' });
