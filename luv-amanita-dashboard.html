@@ -1142,10 +1142,10 @@
         <!-- Top Navigation -->
         <div class="top-nav">
             <div class="user-info">
-                <div class="user-avatar" id="userAvatar">🍄</div>
+                <div class="user-avatar" id="userAvatar">A</div>
                 <div class="user-details">
-                    <h3 id="userName">User Name</h3>
-                    <p><span class="user-role" id="userRole">USER</span></p>
+                    <h3 id="userName">Admin</h3>
+                    <p><span class="user-role" id="userRole">ADMIN</span></p>
                 </div>
             </div>
             <div class="nav-actions">
@@ -1170,7 +1170,7 @@
                 <div class="app-icon">🍄</div>
                 <div class="header-text">
                     <h1 id="appTitle">Sales Tracker</h1>
-                    <p id="appSubtitle">✨ Your Magical Sales Management System 🦋</p>
+                    <p id="appSubtitle">✨ Cloud-Synced Dashboard • Data Saved to Firebase ☁️</p>
                 </div>
             </div>
         </div>
@@ -1582,9 +1582,8 @@
         <div id="toastMessage" style="font-weight: 700;"></div>
     </div>
 
-    <!-- Firebase SDK -->
+    <!-- Firebase SDK (for data storage only, NO AUTH) -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <script>
@@ -1601,11 +1600,25 @@
 
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
         const database = firebase.database();
 
+        // Check if user is logged in (simple session check)
+        if (sessionStorage.getItem('salesTrackerLoggedIn') !== 'true') {
+            window.location.href = 'luv-amanita-index.html';
+        }
+
+        // Get current user from session
+        const currentUsername = sessionStorage.getItem('salesTrackerUser') || 'admin';
+        const currentUserName = sessionStorage.getItem('salesTrackerName') || 'Admin';
+        const currentUserRole = sessionStorage.getItem('salesTrackerRole') || 'admin';
+
+        // Set user info in UI
+        document.getElementById('userName').textContent = currentUserName;
+        document.getElementById('userAvatar').textContent = currentUserName.charAt(0).toUpperCase();
+        document.getElementById('userRole').textContent = currentUserRole.toUpperCase();
+        document.getElementById('saleUser').value = currentUserName;
+
         // App state
-        let currentUser = null;
         let currentPeriod = 'today';
         let currentFormTab = 'sale';
         let products = [];
@@ -1614,22 +1627,6 @@
 
         // Chart instances
         let salesChart, productChart, expenseChart, profitChart;
-
-        // Check authentication
-        auth.onAuthStateChanged((user) => {
-            if (!user) {
-                window.location.href = 'luv-amanita-index.html';
-                return;
-            }
-            currentUser = user;
-            
-            // Set user info in UI
-            document.getElementById('userName').textContent = user.email;
-            document.getElementById('userAvatar').textContent = user.email.charAt(0).toUpperCase();
-            document.getElementById('saleUser').value = user.email;
-            
-            loadData();
-        });
 
         // Apply saved settings
         let currentTheme = localStorage.getItem('salesTrackerTheme') || 'purple';
@@ -1650,12 +1647,12 @@
         document.getElementById('saleDate').valueAsDate = new Date();
         document.getElementById('expenseDate').valueAsDate = new Date();
 
-        // Load data from Firebase
+        // Load data from Firebase (using username as key instead of Firebase UID)
         function loadData() {
-            if (!currentUser) return;
+            const userKey = currentUsername.replace(/[.#$/[\]]/g, '_'); // Sanitize username for Firebase key
 
             // Load products
-            database.ref('products/' + currentUser.uid).on('value', (snapshot) => {
+            database.ref('products/' + userKey).on('value', (snapshot) => {
                 products = [];
                 const data = snapshot.val();
                 if (data) {
@@ -1670,7 +1667,7 @@
             });
 
             // Load sales
-            database.ref('sales/' + currentUser.uid).on('value', (snapshot) => {
+            database.ref('sales/' + userKey).on('value', (snapshot) => {
                 sales = [];
                 const data = snapshot.val();
                 if (data) {
@@ -1684,7 +1681,7 @@
             });
 
             // Load expenses
-            database.ref('expenses/' + currentUser.uid).on('value', (snapshot) => {
+            database.ref('expenses/' + userKey).on('value', (snapshot) => {
                 expenses = [];
                 const data = snapshot.val();
                 if (data) {
@@ -1697,6 +1694,9 @@
                 updateCharts();
             });
         }
+
+        // Initialize data loading
+        loadData();
 
         // Switch form tabs
         function switchTab(tab) {
@@ -1763,6 +1763,7 @@
         document.getElementById('addSaleForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
+            const userKey = currentUsername.replace(/[.#$/[\]]/g, '_');
             const productId = document.getElementById('saleProduct').value;
             const product = products.find(p => p.id === productId);
             const quantity = parseInt(document.getElementById('saleQuantity').value);
@@ -1786,7 +1787,7 @@
 
             const sale = {
                 date: document.getElementById('saleDate').value,
-                user: currentUser.email,
+                user: currentUserName,
                 productId: productId,
                 productName: product.name,
                 quantity: quantity,
@@ -1800,11 +1801,11 @@
             };
 
             // Add sale to Firebase
-            database.ref('sales/' + currentUser.uid).push(sale)
+            database.ref('sales/' + userKey).push(sale)
                 .then(() => {
                     // Update stock
                     const newStock = product.stock - quantity;
-                    return database.ref('products/' + currentUser.uid + '/' + productId).update({
+                    return database.ref('products/' + userKey + '/' + productId).update({
                         stock: newStock,
                         sold: (product.sold || 0) + quantity
                     });
@@ -1829,6 +1830,8 @@
         document.getElementById('addProductForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
+            const userKey = currentUsername.replace(/[.#$/[\]]/g, '_');
+
             const product = {
                 name: document.getElementById('productName').value.trim(),
                 costPrice: parseFloat(document.getElementById('productCost').value),
@@ -1839,10 +1842,11 @@
                 timestamp: Date.now()
             };
 
-            database.ref('products/' + currentUser.uid).push(product)
+            database.ref('products/' + userKey).push(product)
                 .then(() => {
                     showToast('success', '✨', 'Product added successfully!');
                     document.getElementById('addProductForm').reset();
+                    document.getElementById('productLowStock').value = 5;
                 })
                 .catch((error) => {
                     showToast('error', '❌', 'Error: ' + error.message);
@@ -1853,16 +1857,18 @@
         document.getElementById('addExpenseForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
+            const userKey = currentUsername.replace(/[.#$/[\]]/g, '_');
+
             const expense = {
                 date: document.getElementById('expenseDate').value,
                 category: document.getElementById('expenseCategory').value,
                 amount: parseFloat(document.getElementById('expenseAmount').value),
                 description: document.getElementById('expenseDescription').value.trim(),
-                user: currentUser.email,
+                user: currentUserName,
                 timestamp: Date.now()
             };
 
-            database.ref('expenses/' + currentUser.uid).push(expense)
+            database.ref('expenses/' + userKey).push(expense)
                 .then(() => {
                     showToast('success', '✨', 'Expense recorded successfully!');
                     document.getElementById('addExpenseForm').reset();
@@ -2220,6 +2226,7 @@
         document.getElementById('editProductForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
+            const userKey = currentUsername.replace(/[.#$/[\]]/g, '_');
             const id = document.getElementById('editProductId').value;
             const updates = {
                 name: document.getElementById('editProductName').value.trim(),
@@ -2229,7 +2236,7 @@
                 lowStockThreshold: parseInt(document.getElementById('editProductLowStock').value)
             };
 
-            database.ref('products/' + currentUser.uid + '/' + id).update(updates)
+            database.ref('products/' + userKey + '/' + id).update(updates)
                 .then(() => {
                     showToast('success', '✨', 'Product updated successfully!');
                     closeEditProductModal();
@@ -2246,18 +2253,19 @@
         // Delete functions
         function deleteSale(id) {
             if (confirm('Delete this sale? 🔔')) {
+                const userKey = currentUsername.replace(/[.#$/[\]]/g, '_');
                 const sale = sales.find(s => s.id === id);
                 if (sale) {
                     const product = products.find(p => p.id === sale.productId);
                     if (product) {
-                        database.ref('products/' + currentUser.uid + '/' + sale.productId).update({
+                        database.ref('products/' + userKey + '/' + sale.productId).update({
                             stock: product.stock + sale.quantity,
                             sold: (product.sold || 0) - sale.quantity
                         });
                     }
                 }
                 
-                database.ref('sales/' + currentUser.uid + '/' + id).remove()
+                database.ref('sales/' + userKey + '/' + id).remove()
                     .then(() => showToast('info', 'ℹ️', 'Sale deleted'))
                     .catch((error) => showToast('error', '❌', 'Error: ' + error.message));
             }
@@ -2265,7 +2273,8 @@
 
         function deleteProduct(id) {
             if (confirm('Delete this product? 🔔')) {
-                database.ref('products/' + currentUser.uid + '/' + id).remove()
+                const userKey = currentUsername.replace(/[.#$/[\]]/g, '_');
+                database.ref('products/' + userKey + '/' + id).remove()
                     .then(() => showToast('info', 'ℹ️', 'Product deleted'))
                     .catch((error) => showToast('error', '❌', 'Error: ' + error.message));
             }
@@ -2273,7 +2282,8 @@
 
         function deleteExpense(id) {
             if (confirm('Delete this expense? 🔔')) {
-                database.ref('expenses/' + currentUser.uid + '/' + id).remove()
+                const userKey = currentUsername.replace(/[.#$/[\]]/g, '_');
+                database.ref('expenses/' + userKey + '/' + id).remove()
                     .then(() => showToast('info', 'ℹ️', 'Expense deleted'))
                     .catch((error) => showToast('error', '❌', 'Error: ' + error.message));
             }
@@ -2282,10 +2292,11 @@
         function clearAllData() {
             if (confirm('⚠️ Delete ALL data? This cannot be undone! 🔔')) {
                 if (confirm('Are you absolutely sure?')) {
+                    const userKey = currentUsername.replace(/[.#$/[\]]/g, '_');
                     Promise.all([
-                        database.ref('sales/' + currentUser.uid).remove(),
-                        database.ref('products/' + currentUser.uid).remove(),
-                        database.ref('expenses/' + currentUser.uid).remove()
+                        database.ref('sales/' + userKey).remove(),
+                        database.ref('products/' + userKey).remove(),
+                        database.ref('expenses/' + userKey).remove()
                     ]).then(() => {
                         showToast('info', 'ℹ️', 'All data cleared');
                     }).catch((error) => {
@@ -2436,9 +2447,11 @@
 
         function logout() {
             if (confirm('Are you sure you want to logout? 👋')) {
-                auth.signOut().then(() => {
-                    window.location.href = 'luv-amanita-index.html';
-                });
+                sessionStorage.removeItem('salesTrackerLoggedIn');
+                sessionStorage.removeItem('salesTrackerUser');
+                sessionStorage.removeItem('salesTrackerName');
+                sessionStorage.removeItem('salesTrackerRole');
+                window.location.href = 'luv-amanita-index.html';
             }
         }
 
@@ -2479,4 +2492,3 @@
     </script>
 </body>
 </html>
-                        
