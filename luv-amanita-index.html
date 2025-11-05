@@ -485,25 +485,6 @@
         @keyframes spin-load {
             to { transform: rotate(360deg); }
         }
-
-        .user-hint {
-            background: rgba(139, 92, 246, 0.1);
-            padding: 15px;
-            border-radius: 15px;
-            margin-bottom: 20px;
-            border-left: 4px solid #8B5CF6;
-        }
-
-        .user-hint p {
-            margin: 5px 0;
-            font-size: 0.9em;
-            color: #6B21A8;
-            font-weight: 600;
-        }
-
-        body.dark-mode .user-hint p {
-            color: #A78BFA;
-        }
     </style>
 </head>
 <body>
@@ -529,12 +510,6 @@
         </div>
 
         <div class="login-form">
-            <div class="user-hint">
-                <p><strong>🔐 Default Login:</strong></p>
-                <p>👤 Username: <strong>admin</strong></p>
-                <p>🔒 Password: <strong>admin123</strong></p>
-            </div>
-
             <div class="error-message" id="errorMessage">
                 <span id="errorText">❌ Invalid credentials. Please try again! 🔒</span>
             </div>
@@ -564,7 +539,7 @@
         </div>
 
         <div class="login-footer">
-            <span id="footerText">🔐 Simple Login • Data Saves to Firebase Cloud ☁️</span>
+            <span id="footerText">🔐 Secure Login • Data Saves to Firebase Cloud ☁️</span>
         </div>
     </div>
 
@@ -587,7 +562,7 @@
                 usernamePlaceholder: 'Enter username',
                 passwordPlaceholder: 'Enter password',
                 loginBtn: '🚀 Login to Dashboard',
-                footerText: '🔐 Simple Login • Data Saves to Firebase Cloud ☁️',
+                footerText: '🔐 Secure Login • Data Saves to Firebase Cloud ☁️',
                 errorText: '❌ Invalid credentials. Please try again! 🔒',
                 loggingIn: 'Logging in...',
                 success: '✅ Success! Redirecting...',
@@ -601,7 +576,7 @@
                 usernamePlaceholder: 'Ilagay ang username',
                 passwordPlaceholder: 'Ilagay ang password',
                 loginBtn: '🚀 Mag-login sa Dashboard',
-                footerText: '🔐 Simple Login • Data ay naka-save sa Firebase Cloud ☁️',
+                footerText: '🔐 Secure Login • Data ay naka-save sa Firebase Cloud ☁️',
                 errorText: '❌ Mali ang kredensyal. Subukan ulit! 🔒',
                 loggingIn: 'Nag-lo-login...',
                 success: '✅ Tagumpay! Dinadala ka...',
